@@ -22,6 +22,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @ServerEndpoint(value = "/")
@@ -37,32 +38,6 @@ public class SlotWebSocketServer {
 
     @OnOpen
     public void onOpen(Session session) {
-        // 1. 建立牌桌 TODO 資訊
-        try {
-            this.mathTable = tableFactory.createISeverTableCommandSlot(
-                    new AtomicInteger(1),
-                    new FieldConfigBuilder()
-                            .setGameId(1)
-                            .setMinUser((short) 1)
-                            .setMaxUser((short) 1)
-                            .setFieldConfigMap(new HashMap<>(){{
-                        put(1101, new CompanyFieldObjBuilder()
-                                .setGameId(1)
-                                .setLimitMin(0)
-                                .setLimitKick(0)
-                                .setBase(1)
-                                .createCompanyFieldObj());
-                    }}).createFieldConfig(),
-                    1101,
-                    new AgencyPool(),
-                    new PersonControlConfig(null, null),
-                    new UserBdr()
-                            .setBalance(10000)
-                            .setSession(session)
-                            .createUser());
-        } catch (TableException e) {
-            e.printStackTrace();
-        }
 //        LOG.info("{} session connected, session id: {}", LogUtil.getLogPrefix(session, 0), session.getId());
     }
 
@@ -86,27 +61,45 @@ public class SlotWebSocketServer {
         // 1. 打印輸入參數
         System.out.println("received message: " + message);
 
-        // 2. 取得結果 TODO 與客端協議 仍在設計中
+
+        // 2. 建立牌桌 TODO 資訊
+        try {
+            if(Objects.isNull(this.mathTable)) {
+                this.mathTable = tableFactory.createISeverTableCommandSlot(
+                        new AtomicInteger(1),
+                        new FieldConfigBuilder()
+                                .setGameId(302)
+                                .setMinUser((short) 1)
+                                .setMaxUser((short) 1)
+                                .setFieldConfigMap(new HashMap<>() {{
+                                    put(302101, new CompanyFieldObjBuilder()
+                                            .setGameId(302)
+                                            .setLimitMin(0)
+                                            .setLimitKick(0)
+                                            .setBase(1)
+                                            .createCompanyFieldObj());
+                                }}).createFieldConfig(),
+                        302101,
+                        new AgencyPool(),
+                        new PersonControlConfig(null, null),
+                        new UserBdr()
+                                .setBalance(10000)
+                                .setSession(session)
+                                .createUser());
+            }
+        } catch (TableException e) {
+            e.printStackTrace();
+        }
+
+        // 3. 取得結果 TODO 與客端協議 仍在設計中
         try {
             this.mathTable.getSpinResult(JsonUtil.getInstance().writeValueAsStringWithoutException(
                     new ClientSpinRequest(1, ConstMathSlot.BetType.NONE, ConstMathSlot.SpinType.NORMAL, ConstMathSlot.BetSpinType.NONE_NORMAL,new BetSpinTypeExtend())
             ));
 
-            this.mathTable.sendCmdOutResultToHumanPlayer();
+            this.mathTable.sendSpinResultToHumanPlayer();
         } catch (TableException e) {
             e.printStackTrace();
-        }
-//        CmdOut_NgSpin cmdOut_ngSpin = this.mathTable.getSpinResult2(message);
-//        String fakeDataString = JsonUtil.getInstance().writeValueAsStringWithoutException(cmdOut_ngSpin);
-//        ByteBuffer messageByteBuffer = this.stringToByteBuffer(fakeDataString);
-//        System.out.println("send message: " + fakeDataString);
-        try {
-//            session.getBasicRemote().sendBinary(messageByteBuffer);
-//            if (session.isOpen()) {
-////                LOG.debug("{} send response, message: {}", LogUtil.getLogPrefix(session, 0), new String(messageByteBuffer.array(), StandardCharsets.UTF_8));
-//            } else {
-//                LOG.warn("{} session not open, message: {}", LogUtil.getLogPrefix(session, 0), new String(messageByteBuffer.array(), StandardCharsets.UTF_8));
-//            }
         } catch (Exception e) {
 //            LOG.error("{} send message error, message: {}, exMessage: {}", LogUtil.getLogPrefix(session, 0), e.getMessage(), new String(messageByteBuffer.array(), StandardCharsets.UTF_8), e);
             e.printStackTrace();
