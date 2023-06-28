@@ -1,11 +1,16 @@
 package org.lsj.packageHandler.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 // 封包結構
 public class Package {
     private int type;
-    private String body;
+    private JsonNode body;
 
-    public Package(int type, String body) {
+    // 原始建構子提供JSON解析用
+    public Package(){}
+
+    public Package(int type, JsonNode body) {
         this.type = type;
         this.body = body;
     }
@@ -14,7 +19,7 @@ public class Package {
         return type;
     }
 
-    public String getBody() {
+    public JsonNode getBody() {
         return body;
     }
 }

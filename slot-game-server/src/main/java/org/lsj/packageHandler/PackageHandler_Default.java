@@ -1,5 +1,6 @@
 package org.lsj.packageHandler;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.lsj.db.CompanyFieldObjBuilder;
 import org.lsj.gs.FieldConfigBuilder;
 import org.lsj.gs.math.core.common.table.ISeverTableCommandSlot;
@@ -26,7 +27,7 @@ public class PackageHandler_Default extends AbstractPackageHandler {
     // 虎機牌桌 TODO
     ISeverTableCommandSlot mathTable;
 
-    public void handle(Session session, String body){
+    public void handle(Session session, JsonNode body){
         // 1. 建立牌桌 TODO 資訊
         try {
             if(Objects.isNull(this.mathTable)) {
