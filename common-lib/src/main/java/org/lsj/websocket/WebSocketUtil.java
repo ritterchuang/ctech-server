@@ -85,6 +85,8 @@ public class WebSocketUtil implements IWebSocketUtil {
         try {
             if (session.isOpen()) {
                 LOG.debug("{} send response, message: {}", LogUtil.getLogPrefix(session, 0), new String(messageByteBuffer.array(), StandardCharsets.UTF_8));
+                // TODO 移除測試用代碼
+                LOG.warn("{} send response, message: {}", LogUtil.getLogPrefix(session, 0), new String(messageByteBuffer.array(), StandardCharsets.UTF_8));
                 session.getBasicRemote().sendBinary(messageByteBuffer);
             } else {
                 LOG.warn("{} session not open, message: {}", LogUtil.getLogPrefix(session, 0), new String(messageByteBuffer.array(), StandardCharsets.UTF_8));

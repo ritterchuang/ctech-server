@@ -1,19 +1,8 @@
 package org.lsj.websocket;
 
-import org.lsj.db.CompanyFieldObjBuilder;
-import org.lsj.gs.FieldConfigBuilder;
-import org.lsj.gs.math.core.common.table.ISeverTableCommandSlot;
-import org.lsj.gs.math.core.common.table.TableFactory;
-import org.lsj.gs.math.core.common.table.entity.exception.TableException;
-import org.lsj.gs.math.core.common.table.entity.message.slot.ClientSpinRequest;
-import org.lsj.gs.math.core.common.table.entity.message.slot.betSpinTypeExtend.BetSpinTypeExtend;
-import org.lsj.gs.math.core.slot.ConstMathSlot;
-import org.lsj.gs.math.core.slot.clientSpinRequestHlr.enity.SpinRequest;
-import org.lsj.gs.math.entity.CmdOut_NgSpin;
-import org.lsj.gs.pool.AgencyPool;
-import org.lsj.gs.pool.PersonControlConfig;
-import org.lsj.gs.user.User;
-import org.lsj.gs.user.UserBdr;
+import org.lsj.enums.PackageType;
+import org.lsj.packageHandler.*;
+import org.lsj.packageHandler.entity.Package;
 import org.lsj.utils.JsonUtil;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -21,19 +10,12 @@ import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.time.Instant;
+import java.util.Date;
 
 @ServerEndpoint(value = "/")
 @ApplicationScoped
 public class SlotWebSocketServer {
-    // 牌桌工廠
-    private TableFactory tableFactory = new TableFactory();
-
-    // 虎機牌桌 TODO
-    ISeverTableCommandSlot mathTable;
-
 //    private static final Logger LOG = LoggerFactory.getLogger(SlotWebSocketServer.class);
 
     @OnOpen
@@ -55,54 +37,22 @@ public class SlotWebSocketServer {
 
     @OnMessage
     public void onMessage(ByteBuffer messageBytes, Session session) {
-        String message = new String(messageBytes.array(), StandardCharsets.UTF_8);
-//        LOG.debug("{} message: {}", LogUtil.getLogPrefix(session, 0), message);
-
         // 1. 打印輸入參數
-        System.out.println("received message: " + message);
+        String messageString = new String(messageBytes.array(), StandardCharsets.UTF_8);
+        System.out.println(Date.from(Instant.now()) + " received packageObj: " + messageString);
+        // LOG.debug("{} packageObj: {}", LogUtil.getLogPrefix(session, 0), packageObj);
 
+        // 2. 解析JSON物件
+        Package packageObj = JsonUtil.getInstance().readValueWithoutException(messageString, Package.class);
 
-        // 2. 建立牌桌 TODO 資訊
-        try {
-            if(Objects.isNull(this.mathTable)) {
-                this.mathTable = tableFactory.createISeverTableCommandSlot(
-                        new AtomicInteger(1),
-                        new FieldConfigBuilder()
-                                .setGameId(302)
-                                .setMinUser((short) 1)
-                                .setMaxUser((short) 1)
-                                .setFieldConfigMap(new HashMap<>() {{
-                                    put(302101, new CompanyFieldObjBuilder()
-                                            .setGameId(302)
-                                            .setLimitMin(0)
-                                            .setLimitKick(0)
-                                            .setBase(1)
-                                            .createCompanyFieldObj());
-                                }}).createFieldConfig(),
-                        302101,
-                        new AgencyPool(),
-                        new PersonControlConfig(null, null),
-                        new UserBdr()
-                                .setBalance(10000)
-                                .setSession(session)
-                                .createUser());
-            }
-        } catch (TableException e) {
-            e.printStackTrace();
-        }
-
-        // 3. 取得結果 TODO 與客端協議 仍在設計中
-        try {
-            this.mathTable.getSpinResult(JsonUtil.getInstance().writeValueAsStringWithoutException(
-                    new ClientSpinRequest(1, ConstMathSlot.BetType.NONE, ConstMathSlot.SpinType.NORMAL, ConstMathSlot.BetSpinType.NONE_NORMAL,new BetSpinTypeExtend())
-            ));
-
-            this.mathTable.sendSpinResultToHumanPlayer();
-        } catch (TableException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-//            LOG.error("{} send message error, message: {}, exMessage: {}", LogUtil.getLogPrefix(session, 0), e.getMessage(), new String(messageByteBuffer.array(), StandardCharsets.UTF_8), e);
-            e.printStackTrace();
+        // 3. 依照類型處理
+        switch(PackageType.fromCode(packageObj.getType())){
+            case TYPE_HANDSHAKE: new PackageHandler_HandShake().handle(session, packageObj.getBody()); break;
+            case TYPE_HANDSHAKE_ACK: new PackageHandler_HandShakeAck().handle(session, packageObj.getBody()); break;
+            case TYPE_HEARTBEAT: new PackageHandler_HeartBeat().handle(session, packageObj.getBody()); break;
+            case TYPE_DATA: new PackageHandler_Data().handle(session, packageObj.getBody()); break;
+            case TYPE_KICK: new PackageHandler_Kick().handle(session, packageObj.getBody()); break;
+            default: new PackageHandler_Default().handle(session, packageObj.getBody()); break;
         }
     }
 
