@@ -1,8 +1,6 @@
 package org.lsj.enums;
 
-/**
- * 封包類型
- */
+// 封包類型
 public enum PackageType {
     INVALID(0), // 無效
     TYPE_HANDSHAKE(1), // 握手
