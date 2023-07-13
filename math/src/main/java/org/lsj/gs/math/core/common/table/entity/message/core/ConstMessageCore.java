@@ -58,8 +58,8 @@ public class ConstMessageCore {
         UNKNOWN("unknown", "unknown"),
 
         //* 回應客端相關 *//
-        ROUTE_CTS_LOGIN("connector.entryHandler.login", EventType.REQUIRE.getEnumString()), // 請求登入
-        ROUTE_STC_LOGIN("connector.entryHandler.login", EventType.REQUIRE.getEnumString()), // 回應登入
+        ROUTE_CTS_LOGIN("connector.EntryHandler.login", EventType.REQUIRE.getEnumString()), // 請求登入
+        ROUTE_STC_LOGIN("connector.EntryHandler.login", EventType.REQUIRE.getEnumString()), // 回應登入
         ROUTE_CTS_GET_FIELD("gamecenter.gcHandler.getField", EventType.REQUIRE.getEnumString()), // 請求房間列表
         ROUTE_STC_GET_FIELD("gamecenter.gcHandler.getField", EventType.REQUIRE.getEnumString()), // 回應房間列表
         ROUTE_STC_GET_ROOM_DISPLAY_DATA("gamecenter.gcHandler.getRoomDisplayData", EventType.REQUIRE.getEnumString()), // 回應房間路圖
