@@ -23,6 +23,7 @@ public class RoomHandler {
                 this.calculateUpdateUserMessageBody2()))));
     }
 
+    // 更新平台
     public void updatePlatform(Session session, JsonNode body) {
         WebSocketUtil.getInstance().sendResponse(session, JsonUtil.getInstance().writeValueAsStringWithoutException(this.packetHandler.packagePacket(this.packetHandler.calculatePacketBody(
                 FrameType.UPDATEFLATFORM,

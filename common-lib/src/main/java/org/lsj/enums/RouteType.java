@@ -33,7 +33,7 @@ public enum RouteType {
     GAMECENTER_GCHANDLER_DISSOLVEBOX(24, "gamecenter.gcHandler.dissolveBox", NetHeadType.INVALID), // TODO
     GAMECENTER_GCHANDLER_ENTERBOX(25, "gamecenter.gcHandler.enterBox", NetHeadType.INVALID), // TODO
     GAMECENTER_GCHANDLER_ENTERFIELD(26, "gamecenter.gcHandler.enterField", NetHeadType.INVALID), // TODO
-    GAMECENTER_GCHANDLER_ENTERGC(27, "gamecenter.gcHandler.enterGC", NetHeadType.INVALID), // TODO
+    GAMECENTER_GCHANDLER_ENTERGC(27, "gamecenter.gcHandler.enterGC", NetHeadType.STC_REQUIRE), // TODO
     GAMECENTER_GCHANDLER_ENTERBYB(28, "gamecenter.gcHandler.enterbyb", NetHeadType.INVALID), // TODO
     GAMECENTER_GCHANDLER_GAMEMSG(29, "gamecenter.gcHandler.gameMsg", NetHeadType.INVALID), // TODO
     GAMECENTER_GCHANDLER_GETBILLS(30, "gamecenter.gcHandler.getBills", NetHeadType.INVALID), // TODO

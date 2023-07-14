@@ -2,6 +2,7 @@ package org.lsj.packageHandler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.lsj.enums.RouteType;
+import org.lsj.gameCenter.GcHandler;
 import org.lsj.loginServer.connector.EntryHandler;
 import org.lsj.loginServer.gate.GateHandler;
 
@@ -11,6 +12,7 @@ import javax.websocket.Session;
 public class PackageHandler_Data extends AbstractPackageHandler {
     private final EntryHandler entryHandler = new EntryHandler(); // 入口處理器
     private final GateHandler gateHandler = new GateHandler(); // 網關處理器
+    private final GcHandler gcHandler = new GcHandler(); // 遊戲大廳處理器
 
     public void handle(Session session, JsonNode body){
         switch(RouteType.fromRoute(body.get("route").asText())){
@@ -18,6 +20,7 @@ public class PackageHandler_Data extends AbstractPackageHandler {
             case GATE_GATEHANDLER_QUERYENTRY: this.gateHandler.entry(session, body); break;
             case CONNECTOR_ENTRYHANDLER_AUTH: this.entryHandler.auth(session, body); break;
             case CONNECTOR_ENTRYHANDLER_LOGIN: this.entryHandler.login(session, body); break;
+            case GAMECENTER_GCHANDLER_ENTERGC: this.gcHandler.enterGc(session, body); break;
         }
     }
 }
