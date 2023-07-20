@@ -2,7 +2,7 @@ package org.lsj.loginServer.connector;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.lsj.enums.MessageType;
-import org.lsj.enums.PackageType;
+import org.lsj.enums.LoginServerPackageType;
 import org.lsj.enums.RouteType;
 import org.lsj.gs.room.RoomHandler;
 import org.lsj.loginServer.packet.PacketHandler;
@@ -13,7 +13,7 @@ import javax.websocket.Session;
 
 // 入口處理器
 public class EntryHandler {
-    private final PacketHandler packetHandler = new PacketHandler(PackageType.TYPE_DATA, MessageType.TYPE_RESPONSE); // 封包處理器
+    private final PacketHandler packetHandler = new PacketHandler(LoginServerPackageType.TYPE_DATA, MessageType.TYPE_RESPONSE); // 封包處理器
     private final RoomHandler roomHandler = new RoomHandler();
 
     // 查詢 OSS 營運支援系統 TODO token 驗證

@@ -1,7 +1,7 @@
 package org.lsj.enums;
 
-// 封包類型
-public enum PackageType {
+// 登入服務器封包類型
+public enum LoginServerPackageType {
     INVALID(0), // 無效
     TYPE_HANDSHAKE(1), // 握手
     TYPE_HANDSHAKE_ACK(2), // 握手回應
@@ -11,7 +11,7 @@ public enum PackageType {
 
     private final int code; // 編碼
 
-    PackageType(int code) {
+    LoginServerPackageType(int code) {
         this.code = code;
     }
 
@@ -19,9 +19,9 @@ public enum PackageType {
         return code;
     }
 
-    public static PackageType fromCode(int code) {
-        final PackageType[] allEnumInstance = values();
-        for (PackageType enumInstance : allEnumInstance) {
+    public static LoginServerPackageType fromCode(int code) {
+        final LoginServerPackageType[] allEnumInstance = values();
+        for (LoginServerPackageType enumInstance : allEnumInstance) {
             if (enumInstance.getCode() == code) {
                 return enumInstance;
             }

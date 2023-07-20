@@ -7,11 +7,11 @@ import org.lsj.utils.JsonUtil;
 
 // 封包處理器
 public class PacketHandler {
-    private final PackageType packageType; // 封包類型
+    private final LoginServerPackageType loginServerPackageType; // 封包類型
     private final MessageType messageType; // 訊息類型
 
-    public PacketHandler(PackageType packageType, MessageType messageType) {
-        this.packageType = packageType;
+    public PacketHandler(LoginServerPackageType loginServerPackageType, MessageType messageType) {
+        this.loginServerPackageType = loginServerPackageType;
         this.messageType = messageType;
     }
 
@@ -20,7 +20,7 @@ public class PacketHandler {
         ObjectNode result = JsonUtil.getInstance().getObjectMapper().createObjectNode();
 
         // 2. 計算type
-        result.put("type", this.packageType.getCode());
+        result.put("type", this.loginServerPackageType.getCode());
 
         // 3. 計算body
         result.set("body", packetBodyJsonNode);

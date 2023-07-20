@@ -1,5 +1,7 @@
 package org.lsj.gs.math.games.tbnn_java;
 
+import javax.enterprise.event.Event;
+import javax.websocket.Session;
 import org.lsj.gs.event.TableFinishedEvent;
 import org.lsj.gs.math.config.entity.tableFieldConfig.TableFieldConfig;
 import org.lsj.gs.math.config.entity.tableGameConfig.TableGameConfigTbnnJava;
@@ -21,12 +23,8 @@ import org.lsj.gs.math.games.tbnn_java.module.state.*;
 import org.lsj.gs.user.IUser;
 import org.lsj.utils.JsonUtil;
 import org.lsj.websocket.ReceiveGameCommand;
-import org.lsj.gs.math.games.tbnn_java.module.state.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.enterprise.event.Event;
-import javax.websocket.Session;
 
 // 通比牛牛遊戲桌
 public class TableTbnnJava extends AbstractTableMessageEventCard {

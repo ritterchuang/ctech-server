@@ -2,7 +2,7 @@ package org.lsj.packageHandler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.lsj.enums.PackageType;
+import org.lsj.enums.LoginServerPackageType;
 import org.lsj.enums.RouteType;
 import org.lsj.utils.JsonUtil;
 import org.lsj.websocket.WebSocketUtil;
@@ -17,7 +17,7 @@ public class PackageHandler_HandShake extends AbstractPackageHandler {
         this.handShakeJsonNode = JsonUtil.getInstance().getObjectMapper().createObjectNode();
 
         // 1. 計算type
-        this.handShakeJsonNode.put("type", PackageType.TYPE_HANDSHAKE.getCode());
+        this.handShakeJsonNode.put("type", LoginServerPackageType.TYPE_HANDSHAKE.getCode());
 
         // 2. 計算body
         this.handShakeJsonNode.set("body", this.calculateBody());
